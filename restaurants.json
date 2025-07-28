@@ -1,0 +1,50 @@
+{
+  "_comment": "Vienna Ramen Guide - Restaurant Database",
+  "_instructions": "To add a restaurant, copy the template below and fill in all fields",
+  "_template": {
+    "name": "Restaurant Name",
+    "tags": ["tag1", "tag2", "tag3"],
+    "description": "Description here",
+    "address": "Full address, Vienna",
+    "phone": "+43 1 XXX XXXX",
+    "priceRange": "€€",
+    "openingHours": "Hours here",
+    "website": "https://website.com",
+    "instagram": "handle_without_@"
+  },
+  "restaurants": [
+    {
+      "name": "Mochi Ramen Bar",
+      "tags": ["cozy", "authentic", "traditional"],
+      "description": "Authentic Japanese ramen in a warm, intimate setting with perfectly crafted broths and fresh noodles.",
+      "address": "Taborstraße 17, 1020 Wien",
+      "phone": "+43 1 234 5678",
+      "priceRange": "€€",
+      "openingHours": "Mo-Sa 11:30-22:00, So closed",
+      "website": "https://mochi-ramen.at",
+      "instagram": "mochi_ramen_vienna"
+    },
+    {
+      "name": "Maka Ramen",
+      "tags": ["modern", "fusion", "creative"],
+      "description": "Modern ramen shop with innovative fusion flavors and Instagram-worthy presentation.",
+      "address": "Gentzgasse 73, 1180 Wien",
+      "phone": "+43 1 987 6543",
+      "priceRange": "€€",
+      "openingHours": "Tu-Su 12:00-23:00, Mo closed",
+      "website": "https://maka-ramen.at",
+      "instagram": "maka_ramen"
+    },
+    {
+      "name": "Ramen Makotoya",
+      "tags": ["traditional", "authentic", "popular"],
+      "description": "Traditional ramen experience with rich, flavorful broths and handmade noodles.",
+      "address": "Windmühlgasse 26, 1060 Wien",
+      "phone": "+43 1 555 0123",
+      "priceRange": "€€€",
+      "openingHours": "Daily 11:30-22:30",
+      "website": "https://makotoya.at",
+      "instagram": "makotoya_vienna"
+    }
+  ]
+}
