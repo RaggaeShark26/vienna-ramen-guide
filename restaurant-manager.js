@@ -217,7 +217,7 @@ class RestaurantManager {
                 'PUT',
                 {
                     message: commitMessage,
-                    content: btoa(JSON.stringify(newContent, null, 2)),
+                    content: this.encodeUTF8ToBase64(JSON.stringify(newContent, null, 2)),
                     sha: currentFile.sha
                 }
             );
@@ -596,6 +596,17 @@ class RestaurantManager {
             .replace(/>/g, "&gt;")
             .replace(/"/g, "&quot;")
             .replace(/'/g, "&#039;");
+    }
+
+    /**
+     * UTF-8 safe base64 encoding
+     * Handles Unicode characters that btoa() cannot encode
+     */
+    encodeUTF8ToBase64(str) {
+        // Convert string to UTF-8 bytes, then to base64
+        return btoa(encodeURIComponent(str).replace(/%([0-9A-F]{2})/g, (match, p1) => {
+            return String.fromCharCode(parseInt(p1, 16));
+        }));
     }
 }
 
