@@ -53,7 +53,7 @@ async function loadRestaurants() {
         
         const data = await response.json();
         console.log('✅ Successfully loaded from GitHub!');
-        return data.restaurants || data; // Handle both formats
+        return data.restaurants || data;
         
     } catch (error) {
         console.log('⚠️ Using fallback data:', error.message);
@@ -136,13 +136,8 @@ function generateRestaurantCards(restaurants) {
 document.addEventListener('DOMContentLoaded', async function() {
     console.log('🍜 Vienna Ramen Guide loading...');
     
-    // Small delay to ensure other widgets load first
     setTimeout(async () => {
         const restaurants = await loadRestaurants();
         generateRestaurantCards(restaurants);
     }, 500);
 });
-
-// Make functions available globally
-window.loadRestaurants = loadRestaurants;
-window.generateRestaurantCards = generateRestaurantCards;
