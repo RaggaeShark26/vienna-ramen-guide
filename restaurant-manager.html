@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🍜 Vienna Ramen Guide - Restaurant Manager</title>
+    <link rel="stylesheet" href="restaurant-manager.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <h1>🍜 Vienna Ramen Guide</h1>
+            <h2>Restaurant Manager</h2>
+            <p>Manage your restaurants with direct GitHub integration - no copy-pasting needed!</p>
+        </header>
+
+        <!-- Setup Section -->
+        <div id="setup-section" class="setup-section">
+            <div class="setup-card">
+                <h3><i class="fab fa-github"></i> Setup GitHub Integration</h3>
+                <p>To get started, you'll need a GitHub Personal Access Token to manage your restaurants automatically.</p>
+                
+                <div class="setup-steps">
+                    <div class="step">
+                        <span class="step-number">1</span>
+                        <div class="step-content">
+                            <h4>Create GitHub Token</h4>
+                            <p>Go to <a href="https://github.com/settings/tokens" target="_blank">GitHub Settings → Developer settings → Personal access tokens</a></p>
+                            <p>Create a new token with <strong>repo</strong> permissions</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <span class="step-number">2</span>
+                        <div class="step-content">
+                            <h4>Enter Your Token</h4>
+                            <input type="password" id="github-token" placeholder="ghp_xxxxxxxxxxxxxxxxxxxxxxxx">
+                            <small>Your token is stored locally and never shared</small>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <span class="step-number">3</span>
+                        <div class="step-content">
+                            <button id="connect-github" class="btn btn-primary">
+                                <i class="fas fa-link"></i> Connect GitHub
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Manager Section -->
+        <div id="manager-section" class="manager-section hidden">
+            <!-- Status Bar -->
+            <div class="status-bar">
+                <div class="status-info">
+                    <span id="connection-status" class="status-connected">
+                        <i class="fas fa-check-circle"></i> Connected to GitHub
+                    </span>
+                    <span id="last-sync">Last sync: Never</span>
+                </div>
+                <div class="status-actions">
+                    <button id="refresh-data" class="btn btn-secondary">
+                        <i class="fas fa-sync"></i> Refresh
+                    </button>
+                    <button id="disconnect-github" class="btn btn-outline">
+                        <i class="fas fa-sign-out-alt"></i> Disconnect
+                    </button>
+                </div>
+            </div>
+
+            <!-- Loading Indicator -->
+            <div id="loading" class="loading hidden">
+                <i class="fas fa-spinner fa-spin"></i> Loading restaurants...
+            </div>
+
+            <!-- Error Messages -->
+            <div id="error-message" class="alert alert-error hidden">
+                <i class="fas fa-exclamation-triangle"></i>
+                <span id="error-text"></span>
+                <button id="dismiss-error" class="btn-close">&times;</button>
+            </div>
+
+            <!-- Success Messages -->
+            <div id="success-message" class="alert alert-success hidden">
+                <i class="fas fa-check-circle"></i>
+                <span id="success-text"></span>
+                <button id="dismiss-success" class="btn-close">&times;</button>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="quick-actions">
+                <button id="add-restaurant" class="btn btn-primary">
+                    <i class="fas fa-plus"></i> Add New Restaurant
+                </button>
+                <button id="backup-data" class="btn btn-secondary">
+                    <i class="fas fa-download"></i> Backup Data
+                </button>
+            </div>
+
+            <!-- Restaurant List -->
+            <div class="restaurant-list-section">
+                <h3>Your Restaurants <span id="restaurant-count" class="count">0</span></h3>
+                <div id="restaurant-list" class="restaurant-list">
+                    <!-- Restaurants will be dynamically loaded here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Add/Edit Restaurant Modal -->
+        <div id="restaurant-modal" class="modal hidden">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 id="modal-title">Add New Restaurant</h3>
+                    <button id="close-modal" class="btn-close">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <form id="restaurant-form">
+                        <div class="form-group">
+                            <label for="name">Restaurant Name *</label>
+                            <input type="text" id="name" name="name" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="tags">Tags (comma-separated)</label>
+                            <input type="text" id="tags" name="tags" placeholder="cozy, authentic, modern">
+                            <small>2-4 descriptive words separated by commas</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="description">Description *</label>
+                            <textarea id="description" name="description" rows="3" required 
+                                      placeholder="What makes this restaurant special? (1-2 sentences)"></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="address">Address *</label>
+                            <input type="text" id="address" name="address" required 
+                                   placeholder="Street Address, Postal Code Vienna">
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="phone">Phone</label>
+                                <input type="text" id="phone" name="phone" placeholder="+43 1 XXX XXXX">
+                            </div>
+                            <div class="form-group">
+                                <label for="priceRange">Price Range *</label>
+                                <select id="priceRange" name="priceRange" required>
+                                    <option value="">Select price range</option>
+                                    <option value="€">€ (Budget-friendly)</option>
+                                    <option value="€€">€€ (Moderate)</option>
+                                    <option value="€€€">€€€ (Premium)</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="openingHours">Opening Hours</label>
+                            <input type="text" id="openingHours" name="openingHours" 
+                                   placeholder="Mo-Sa 11:30-22:00, So closed">
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="website">Website</label>
+                                <input type="url" id="website" name="website" placeholder="https://restaurant.com">
+                            </div>
+                            <div class="form-group">
+                                <label for="instagram">Instagram</label>
+                                <input type="text" id="instagram" name="instagram" placeholder="restaurant_handle">
+                                <small>Handle without @ symbol</small>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button id="cancel-restaurant" class="btn btn-secondary">Cancel</button>
+                    <button id="save-restaurant" class="btn btn-primary">
+                        <i class="fas fa-save"></i> Save Restaurant
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Delete Confirmation Modal -->
+        <div id="delete-modal" class="modal hidden">
+            <div class="modal-content modal-small">
+                <div class="modal-header">
+                    <h3>Delete Restaurant</h3>
+                    <button id="close-delete-modal" class="btn-close">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <p>Are you sure you want to delete <strong id="delete-restaurant-name"></strong>?</p>
+                    <p class="text-warning">This action cannot be undone.</p>
+                </div>
+                <div class="modal-footer">
+                    <button id="cancel-delete" class="btn btn-secondary">Cancel</button>
+                    <button id="confirm-delete" class="btn btn-danger">
+                        <i class="fas fa-trash"></i> Delete
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="restaurant-manager.js"></script>
+</body>
+</html>
